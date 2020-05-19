@@ -1,7 +1,7 @@
 {
   "variables": {
-    "aws_access_key": "AKIA4EGCAX2PFMZ6JRUP",
-    "aws_secret_key": "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",
+    "aws_access_key": "JHADK&#N83JN92GH",
+    "aws_secret_key": "0JAGS6GDJ9gs5jsJKahdHD8KQgaoP",
     "ssh_keypair_name": "anurag-aws"
   },
   "builders": [
