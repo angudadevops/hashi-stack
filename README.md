@@ -1,4 +1,6 @@
-<h1>Complete HashiStack</h1>
+[![HitCount](http://hits.dwyl.com/angudadevops/hashi-stack.svg)](http://hits.dwyl.com/angudadevops/hashi-stack)
+
+<h1>Complete HashiStack</h1> 
 
 <h2> Instroduction </h2>
 
