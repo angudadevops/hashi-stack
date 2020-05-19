@@ -4,7 +4,7 @@
 
 <h2> Instroduction </h2>
 
-This repository helps you to setup your development environemt and also setup production environment with 3 master nodes and 3 clients. 
+This repository helps you to setup your development environemt and also setup production environment with 3 master nodes and 2 clients. 
 
 - [Build and Test Environment](#Build-and-Test-Environment) 
 - [Enterprise Environment](#Enterprise-Setup) 
