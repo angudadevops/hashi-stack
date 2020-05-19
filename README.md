@@ -22,9 +22,9 @@ Build and test Environment helps you to explore the tools and test your changes 
 The Final Test Environment inclides:
 
 - Vagrant 
-  - Consul
-  - Nomad
-  - Vault
+  - Consul 1.7.3
+  - Nomad 0.11.1
+  - Vault 1.4.1
 
 ### Prerequsites
 
@@ -93,3 +93,6 @@ Use the Output of AWS public IP and access hashi UI
 Access Hashi UI with http://awspublicip:3000
 ```
 
+### Troubleshooting
+
+Please raise a github issue, if you had any issue with setup. 
