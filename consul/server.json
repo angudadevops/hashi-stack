@@ -1,0 +1,14 @@
+{
+  "server": true,
+  "node_name": "NODENAME",
+  "datacenter": "us-west-1",
+  "data_dir": "/etc/consul.d/data",
+  "bind_addr": "0.0.0.0",
+  "client_addr": "0.0.0.0",
+  "advertise_addr": "PRIVATEIP",
+  "bootstrap_expect": 1,
+  "ui": true,
+  "log_level": "DEBUG",
+  "enable_syslog": true,
+  "acl_enforce_version_8": false
+}

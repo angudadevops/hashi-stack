@@ -1,0 +1,74 @@
+#sudo docker run -e NOMAD_ENABLE=1 -e NOMAD_ADDR=http://172.20.20.10:4646 -e CONSUL_ENABLE=1 -e CONSUL_ADDR=http://172.20.20.10:8500 -p 8000:3000 jippi/hashi-ui
+
+SERVER_COUNT = 3
+AGENT_COUNT = 2
+
+def serverIP(num)
+  return "172.20.20.#{num+10}"
+end
+
+def agentIP(num)
+  return "172.20.20.#{num+100}"
+end
+
+Vagrant.configure("2") do |config|
+  
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.synced_folder "../", "/vagrant"
+
+   (1..SERVER_COUNT).each do |i|
+    
+     config.vm.define vm_agent_name = "server-%d" % i do |server|
+       PRIVATE_IP = serverIP(i)
+   
+       server.vm.hostname = vm_agent_name
+       server.vm.network :private_network, ip: "#{PRIVATE_IP}"
+ 
+       server.vm.provision :shell, :privileged => true,
+       inline: <<-EOF
+       echo "#{vm_agent_name}" | tee /tmp/nodename
+       echo "NODE_NAME=#{vm_agent_name}" >> /etc/environment
+       echo "PRIVATE_IP=#{PRIVATE_IP}" >> /etc/environment
+       echo "SERVER_IP=#{serverIP(i)}" >>  /etc/environment
+       echo "count=#{SERVER_COUNT}" >> /etc/environment
+       echo "#{serverIP(1)}" | tee /tmp/server
+       EOF
+       
+       server.vm.provision :shell, :path => "scripts/setup.sh", :privileged => true
+       server.vm.provision :file, :source => "../nomad/jobs", :destination => "/tmp/"
+       server.vm.provision :file, :source => "scripts/serverlist.sh", :destination => "/tmp/"
+       server.vm.provision :file, :source => "scripts/serverstart.sh", :destination => "/tmp/"
+       server.vm.provision :shell, :inline => "/bin/bash /tmp/serverlist.sh", :privileged => true
+       server.vm.provision :shell, :inline => "/bin/bash /tmp/serverstart.sh", :privileged => true
+    end  
+  end
+
+ (1..AGENT_COUNT).each do |i|
+    config.vm.define vm_agent_name = "agent-%d" % i do |agent|
+
+      agent.vm.hostname = vm_agent_name
+      agent.vm.network :private_network, ip: agentIP(i)
+ 
+      agent.vm.provision :shell, :privileged => true,
+      inline: <<-EOF
+      echo "NODE_NAME=#{vm_agent_name}" >> /etc/environment
+      echo "PRIVATE_IP=#{agentIP(i)}" >> /etc/environment
+      echo "SERVER_IP=#{serverIP(1)}" >>  /etc/environment
+      echo "count=#{SERVER_COUNT}" >> /etc/environment
+       echo "#{serverIP(1)}" | tee /tmp/server
+      EOF
+      agent.vm.provision :shell, :path => "scripts/setup.sh", :privileged => true
+      agent.vm.provision :file, :source => "scripts/serverlist.sh", :destination => "/tmp/"
+      agent.vm.provision :file, :source => "scripts/clientstart.sh", :destination => "/tmp/"
+      agent.vm.provision :file, :source => "scripts/vaultinit.sh", :destination => "/tmp/"
+      agent.vm.provision :shell, :inline => "/bin/bash /tmp/serverlist.sh", :privileged => true
+      agent.vm.provision :shell, :inline => "/bin/bash /tmp/clientstart.sh", :privileged => true
+      agent.vm.provision :shell, :inline => "/bin/bash /tmp/vaultinit.sh", :privileged => true
+    end
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1536"
+  end
+  
+end

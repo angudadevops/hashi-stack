@@ -1,0 +1,19 @@
+[Unit]
+Description=Run Hashi-ui
+Requires=nomad.service
+After=nomad.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+RestartSec=5
+Restart=always
+ExecStart=/usr/bin/docker run \
+    -e NOMAD_ENABLE=1 \
+    -e NOMAD_ADDR=http://SERVERIP:4646 \
+    -e CONSUL_ADDR=http://SERVERIP:8500 \
+    -e CONSUL_ENABLE=1 \
+    -e LOG_LEVEL=error \
+    --net=host \
+    jippi/hashi-ui

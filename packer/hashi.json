@@ -1,0 +1,28 @@
+{
+  "variables": {
+    "aws_access_key": "AKIA4EGCAX2PFMZ6JRUP",
+    "aws_secret_key": "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",
+    "ssh_keypair_name": "anurag-aws"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "source_ami" : "ami-003634241a8fcdec0",
+      "region": "us-west-2",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ssh_keypair_name": "{{user `ssh_keypair_name`}}",
+      "ssh_private_key_file":"~/Downloads/AWS/anurag-aws.pem",
+      "ami_name": "hashi-example {{timestamp}}"
+    }
+  ],
+  "provisioners": [{
+    "type": "shell",
+    "scripts": [
+      "prereqs.sh"
+    ],
+    "execute_command" : "echo 'vagrant' | sudo -S -E bash '{{ .Path }}'"
+  }]
+}
