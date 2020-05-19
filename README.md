@@ -4,14 +4,14 @@
 
 This repository helps you to setup your development environemt and also setup production environment with 3 master nodes and 3 clients. 
 
-- [Build and Test Environment](#Build and Test Environment) 
-- [Enterprise Environment](#Enterprise Setup) 
+- [Build and Test Environment](#Build-and-Test-Environment) 
+- [Enterprise Environment](#Enterprise-Setup) 
 
 ## Motivation
 
 ![Hashi Stack Setup](images/hashi-stack.png) 
 ![Vault HA Setup](images/vault-ha-consul.png)
-![Nomad HA Setup](images/nomad-ha.png)
+![Nomad HA Setup](images/nomad_ha.png)
 
 ## Build and Test Environment
 
