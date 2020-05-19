@@ -39,8 +39,17 @@ The Final Test Environment inclides:
 Update your number of servers depends on your system memory and CPU and run below command to explore hashi tools
 
 ```
-cd vagrant
-vagrant up
+$ cd vagrant
+$ vagrant up
+```
+## Deployment
+
+Connect nomad cluster and run below command to install job on nomad, please make sure you have enough resources to run the jobs
+
+```
+$ vagrant ssh server-1
+$ nomad run -address http://172.20.20.11:4646 /tmp/jobs/nginx.nomad
+$ nomad run -address http://172.20.20.11:4646 /tmp/jobs/simple.nomad
 ```
 
 ### Access
