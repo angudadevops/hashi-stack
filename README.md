@@ -39,6 +39,7 @@ The Final Test Environment inclides:
 Update your number of servers depends on your system memory and CPU and run below command to explore hashi tools
 
 ```
+cd vagrant
 vagrant up
 ```
 
