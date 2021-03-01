@@ -1,0 +1,8 @@
+{
+  "type": "kv",
+  "path": "kv",
+  "option": {
+	  "version": "2"
+  },
+  "generate_signing_key" : "true"
+}

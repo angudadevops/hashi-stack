@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault
+  labels:
+    app: vault
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: vault
+  template:
+    metadata:
+      labels:
+        app: vault
+    spec:
+      containers:
+      - name: vault
+        command: ["vault", "server", "-config", "/vault/config/vault.hcl"]
+        image: "vault:1.6.1"
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: VAULT_CLUSTER_ADDR
+            value: "http://$(POD_IP):8201"
+          - name: VAULT_API_ADDR
+            value: "http://$(POD_IP):8200"
+        ports:
+          - containerPort: 8200
+            name: vault
+          - containerPort: 8201
+            name: vault1
+        securityContext:
+          capabilities:
+            add:
+              - IPC_LOCK
+        volumeMounts:
+          - name: configurations
+            mountPath: /vault/config/vault.hcl
+            subPath: vault.hcl
+      - name: consul-vault-agent
+        image: "consul:1.9.1"
+        env:
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+        args:
+          - "agent"
+          - "-retry-join=consul-0.consul.$(NAMESPACE).svc.cluster.local"
+          - "-retry-join=consul-1.consul.$(NAMESPACE).svc.cluster.local"
+          - "-retry-join=consul-2.consul.$(NAMESPACE).svc.cluster.local"
+          - "-domain=cluster.local"
+          - "-datacenter=dc1"
+          - "-disable-host-node-id"
+          - "-node=$(NAME)"
+      volumes:
+        - name: configurations
+          configMap:
+            name: vault-conf
